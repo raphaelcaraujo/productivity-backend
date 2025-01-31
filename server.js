@@ -39,8 +39,20 @@ const taskSchema = new mongoose.Schema({
 
 const Task = mongoose.model("Task", taskSchema);
 
+// ✅ Root Route (Fixes "Cannot GET /" Error)
+app.get("/", (req, res) => {
+  res.json({
+    message: "✅ Productivity API is running!",
+    endpoints: {
+      saveTask: "/api/save-task",
+      allTasks: "/api/all-tasks",
+      updateTask: "/api/update-task/:id",
+    },
+  });
+});
+
 // ✅ Route to handle form submission (Create Task)
-app.post("/save-task", async (req, res) => {
+app.post("/api/save-task", async (req, res) => {
   try {
     console.log("📩 Form Data Received:", req.body);
 
@@ -69,7 +81,7 @@ app.post("/save-task", async (req, res) => {
 });
 
 // ✅ Fetch all tasks (Read)
-app.get("/all-tasks", async (req, res) => {
+app.get("/api/all-tasks", async (req, res) => {
   try {
     const tasks = await Task.find({});
     console.log("📤 Sending tasks:", tasks);
@@ -81,7 +93,7 @@ app.get("/all-tasks", async (req, res) => {
 });
 
 // ✅ Update a task (Complete Task)
-app.put("/update-task/:id", async (req, res) => {
+app.put("/api/update-task/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { completeDate } = req.body;
